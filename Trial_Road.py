@@ -20,6 +20,9 @@ shape.penup()
 # List to store obstacle
 obstacles = []
 
+# List of obstacles already passed
+passed_obstacle = []
+
 # Set the boundaries
 border_left = -290
 border_right = 290
@@ -28,6 +31,9 @@ border_bottom = -190
 
 # Set the speed
 speed = 20
+
+# Set the score
+score = 0
 
 # Function that outputs when you run the game
 def main_menu():
@@ -83,6 +89,15 @@ def createObstacle():
 	# obstacle.goto(border_right, random.randint(border_bottom, border_top))
 	obstacle.goto(border_right + random.randint(0, 100), random.randint(border_bottom, border_top))
 	obstacles.append(obstacle)
+
+def display_score():
+	turtle.penup()
+	turtle.goto(-60, 180)
+	turtle.color('white')
+	turtle.clear()  # Clear the previous score display
+	turtle.write(f'Score: {score}', align='left', font=('comicsans', 14, 'bold'))
+
+	turtle.hideturtle()
 
 # Function to move obstacles to the left
 def move_obstacles():
@@ -141,7 +156,11 @@ def died():
 def quitGame():
 	window.bye()
 
+
 def main():
+	global score
+	score = 0
+
 	# Clear the obstacles
 	clearObstacles()
 
@@ -176,6 +195,7 @@ def main():
 	while True:
 
 		move_obstacles()
+		display_score()
 		if check_collisions():
 			break
 		window.update() # Update the screen
@@ -185,6 +205,12 @@ def main():
 		if len(obstacles)<15 or check_obstacles(): # create an obstacle if there are no obstacles
 			if random.randint(1, 50) == 1:  # controls the frequency of obstacle creation by changing the value of 50
 				createObstacle()
+
+		for obstacle in obstacles:
+			if obstacle.xcor() < shape.xcor() and obstacle not in passed_obstacle:
+				score += 1
+				display_score()
+				passed_obstacle.append(obstacle)
 
 	# Keep the window open
 	turtle.done()
