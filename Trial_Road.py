@@ -35,25 +35,29 @@ speed = 20
 # Set the score
 score = 0
 
+# speed increase based on score
+if score/10 > speed:
+	speed+=20
+
 # Function that outputs when you run the game
 def main_menu():
 	# Write on screen new game
-    turtle.penup()
-    turtle.goto(-280, 0)
-    turtle.color('white')
-    turtle.write('New Game? (press enter to start)', align='left', font=('comicsans', 20, 'bold'))
+	turtle.penup()
+	turtle.goto(-280, 0)
+	turtle.color('white')
+	turtle.write('New Game? (press enter to start)', align='left', font=('comicsans', 20, 'bold'))
 
     # Hide the turtle
-    turtle.hideturtle
+	turtle.hideturtle
 	
     # Bind key Enter to main
-    window.onkeypress(main, key='Return')
+	window.onkeypress(main, key='Return')
 	
     # Listen for key event
-    window.listen()
+	window.listen()
 	
     # Keep the window open
-    turtle.done()
+	turtle.done()
 	
 # Function to move the shape forward
 def move_forward():
@@ -102,7 +106,10 @@ def display_score():
 # Function to move obstacles to the left
 def move_obstacles():
 	for obstacle in obstacles:
-		obstacle.setx(obstacle.xcor() - .3) # You can adjust the speed as needed by changing the value of .1
+		if score > 0:
+			obstacle.setx(obstacle.xcor() - (score/100))# speed increase based on score
+		else:
+			obstacle.setx(obstacle.xcor() - .1)# You can adjust the speed as needed by changing the value of .1
 
 		if obstacle.xcor() < border_left:
 			obstacles.remove(obstacle)
@@ -131,6 +138,7 @@ def clearObstacles():
 
 # Function that outputs when you lose
 def died():
+	clearObstacles()
 	# Write on the screen
 	turtle.penup()
 	turtle.goto(-280, 100) # Set the position where the text will be written
